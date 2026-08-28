@@ -75,24 +75,24 @@ pipeline {
             }
         }
 
-        // Optional: enable after adding the 'dockerhub-token' credential
-        // (Manage Jenkins -> Credentials -> Username with password).
-        // stage('Publish') {
-        //     steps {
-        //         withCredentials([usernamePassword(
-        //             credentialsId: 'dockerhub-token',
-        //             usernameVariable: 'DOCKER_USER',
-        //             passwordVariable: 'DOCKER_PASS'
-        //         )]) {
-        //             sh '''
-        //                 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-        //                 docker tag "$IMAGE" "$DOCKER_USER/inference:$BUILD_NUMBER"
-        //                 docker push "$DOCKER_USER/inference:$BUILD_NUMBER"
-        //                 docker logout
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Publish') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-token',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag "$IMAGE" "$DOCKER_USER/inference:$BUILD_NUMBER"
+                        docker tag "$IMAGE" "$DOCKER_USER/inference:latest"
+                        docker push "$DOCKER_USER/inference:$BUILD_NUMBER"
+                        docker push "$DOCKER_USER/inference:latest"
+                        docker logout
+                    '''
+                }
+            }
+        }
     }
 
     post {
