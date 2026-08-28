@@ -1,4 +1,5 @@
 """Synthetic dataset generator. Fixed seed => reproducible builds.
+(trigger test: this comment change should start a build by itself)
 
 The `label_noise` knob in train_config.json is the break-lever:
   0.05 simulates a normal data batch  -> accuracy ~0.95 (gate passes)
